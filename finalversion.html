@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Card</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <style>
+        /*  Helper Styles */
+        body {
+            font-family: Varela Round;
+            background: #f1f1f1;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        /* Card Styles */
+
+        .card-sl {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .card-image img {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 8px 8px 0px 0;
+        }
+
+        .fa {
+            position: relative;
+            top: 30%;
+            left: 35%;
+        }
+
+        .card-action {
+            position: relative;
+            float: right;
+            height: 50px;
+            width: 50px;
+            margin-top: -25px;
+            margin-right: 20px;
+            z-index: 2;
+            color: #1F487E;
+            background: #fff;
+            border-radius: 100%;
+            font-size: 15px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .card-action:hover {
+            color: #fff;
+            background: #1F487E;
+            -webkit-animation: pulse 1.5s infinite;
+        }
+
+        .card-heading {
+            font-size: 18px;
+            font-weight: bold;
+            background: #fff;
+            padding: 10px 15px;
+        }
+
+        .card-author {
+            font-size: 15px;
+            font-weight: bold;
+            background: #fff;
+            padding: 10px 15px;
+        }
+
+        .card-text {
+            padding: 10px 15px;
+            background: #fff;
+            font-size: 14px;
+            color: #636262;
+        }
+
+        .card-button {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            width: 100%;
+            background-color: #1F487E;
+            color: #fff;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .card-button:hover {
+            text-decoration: none;
+            background-color: #1D3461;
+            color: #fff;
+
+        }
+
+
+        @-webkit-keyframes pulse {
+            0% {
+                -moz-transform: scale(0.9);
+                -ms-transform: scale(0.9);
+                -webkit-transform: scale(0.9);
+                transform: scale(0.9);
+            }
+
+            70% {
+                -moz-transform: scale(1);
+                -ms-transform: scale(1);
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+            }
+
+            100% {
+                -moz-transform: scale(0.9);
+                -ms-transform: scale(0.9);
+                -webkit-transform: scale(0.9);
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+            }
+        }
+    </style>
+    <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+</head>
+
+<body>
+    <div class="container" style="margin-top:50px;">
+        <div class="row">
+
+        </div>
+    </div>
+    <script>
+
+        let url = 'https://docs.google.com/spreadsheets/d/1qzJrsbHSEDLCWd2XE5_wSj9NOr6_HByPMi_lX0QGN70/gviz/tq?sheet=newsletter&range=A1:E21'
+
+        let finarr = [];
+        let title = {
+            "Author": null,
+            "Title": null,
+            "Description": null,
+            "NewsLetter": null,
+            "TitleCard":null
+        };
+
+        fetch(url)
+            .then(res => res.text())
+            .then(rep => {
+                const data = JSON.parse(rep.substr(47).slice(0, -2));
+                data.table.rows.forEach(element => {
+                    let arr = [];
+                    let a = element.c;
+                    console.log(a)
+                    let temp = [];
+                    for (let i = 0; i < a.length; i++) {
+                        console.log(a[i].v)
+                        arr.push(a[i].v)
+                    }
+                    title.Author = arr[0]
+                    title.Title = arr[1]
+                    title.Description = arr[2]
+                    title.NewsLetter = arr[3]
+                    title.TitleCard = arr[4]
+                    Object.assign(temp, title)
+                    finarr.push(temp)
+                    console.log(title)
+                });
+            })
+            .then(r => {
+                for (let i = 1; i < finarr.length; i++) {
+                    let parent = document.getElementsByClassName('row')[0]
+                    parent.innerHTML += `<div id="singlecard${i}" class="col-md-4" style="padding: 20px 20px">
+                <div class="card-sl">
+                    <div class="card-image">
+                        <img src="${finarr[i].TitleCard}" />
+                    </div>
+                    <a class="card-action" href="${finarr[i].NewsLetter}" target="_blank"><i class="fa fa-download"></i></a>
+                    <div class="card-heading" id="Title${i}">
+                        <p>${finarr[i].Title}</p>
+                    </div>
+                    <div class="card-text" id="Description${i}">
+                        <p>${finarr[i].Description}</p>
+                    </div>
+                    <div class="card-author" id="Author${i}">
+                        <p>Author- ${finarr[i].Author}</p>
+                    </div>
+                    <a href="${finarr[i].NewsLetter}" target="_blank" id="File${i}" class="card-button">Read</a>
+                </div>
+            </div>`
+                }
+            })
+    </script>
+</body>
+
+</html>
